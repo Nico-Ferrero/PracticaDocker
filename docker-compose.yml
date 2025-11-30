@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_contenidor
+    environment:
+      MYSQL_ROOT_PASSWORD: password_root
+      MYSQL_DATABASE: elementos
+      MYSQL_USER: usuario_db
+      MYSQL_PASSWORD: password_db
+    volumes:
+      - ./mysql-init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  backend:
+    build: ./backend
+    container_name: backend_contenidor
+    depends_on:
+      - mysql
+    ports:
+      - "8000:8000"
+    command: ./wait-for-it.sh mysql_contenidor:3306 -- php -S 0.0.0.0:8000
+
+  frontend:
+    build: ./frontend
+    container_name: frontend_contenidor
+    depends_on:
+      - backend
+    ports:
+      - "8080:8080"
+    command: npm run serve
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.2
+    container_name: adminMySQL_contenidor
+    depends_on:
+      - mysql
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: mysql_contenidor
+
+volumes:
+  mysql_data:
