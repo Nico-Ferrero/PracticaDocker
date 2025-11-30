@@ -54,6 +54,14 @@ RUN chmod +x wait-for-it.sh
 
 EXPOSE 8000
 ```
+Voy a explicar el dockerfile:
+ - Primero utilizamos la imagen de alpine:3.18 y copiamos todo el codigo de la carpeta raiz.
+ - Luego iniciamos la imagen final con php 8.1-cli-alpine.
+ - Instalamos las extensiones de php necesarias.
+ - Asignamos el directorio de trabajo en /var/www/html.
+ - Copiamos el codigo (builder).
+ - Le damos permisos de ejecucion al script wait-for-it.sh.
+ - Exponemos el puerto 8000.
 
 ### Frontend
 - **Contenedor**: `frontend_contenidor`
@@ -76,6 +84,14 @@ EXPOSE 8080
 
 CMD ["npm", "run", "serve"]
 ```
+Voy a explicar el dockerfile:
+ - Primero utilizamos la imagen de node:18-alpine como dependencias.
+ - Copiamos el package.json y instalamos las dependencias.
+ - Iniciamos una nueva imagen limpia de node:18-alpine.
+ - Copiamos la carpeta node_modules.
+ - Copiamos el resto del codigo de la carpeta raiz.
+ - Exponemos el puerto 8080.
+ - Lanzamos el comando npm run serve.
 
 ### phpMyAdmin
 Desde aqui podremos gestionar la base de datos.
